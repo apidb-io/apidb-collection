@@ -1,0 +1,29 @@
+---
+- name: create temporary local fact home (non-root)
+  file:
+    path: /tmp/local
+    state: directory
+
+- name: Insert empty local fact file
+  copy:
+    src: files/local.fact
+    dest: /tmp/local/local.fact
+    mode: '0644'
+
+- name: insert custom fact script
+  copy:
+    src: files/customFactSetup.sh
+    dest: /tmp/local/customFactSetup.sh
+    mode: '0755'
+
+- name: add Instance facts
+  shell: /tmp/local/customFactSetup.sh
+
+- name: local facts
+  debug: var=ansible_local
+  notify:
+  - reload facts
+
+- name: reload facts
+  setup: filter=ansible_local
+

@@ -1,0 +1,5 @@
+---
+# vars file for apidb-localfacts
+server_env: "{{ ansible_local.local.local_facts.environment }}"
+support_team: "{{ ansible_local.local.local_facts.support_team }}"
+region: "{{ ansible_local.local.local_facts.region }}"
