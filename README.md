@@ -40,7 +40,7 @@ Role Variables
 --------------
 
 To authenticate with apidb.io you will need a TOKEN. To get yours, sign-up [here](http://www.apidb.io). Create an account and visit the ````profile```` page.
-Once you have your unique TOKEN, update this variables under ````vars/main.yml````
+Once you have your unique TOKEN, update this variables under ````group_vars/all.yml````
 
 ````
 ---
