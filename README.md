@@ -84,6 +84,23 @@ An example of how to use this role:
         - role: apidb-post
           tags: post
 
+First run
+---------
+````
+ansible-playbook  deploy.yml --tags=collect,post
+````
+
+second run
+----------
+````
+ansible-playbook  deploy.yml --tags=local_facts,collect,post
+````
+
+third run
+---------
+````
+ansible-playbook  deploy.yml --tags=local_facts,cis,collect,post
+````
 
 License
 -------
