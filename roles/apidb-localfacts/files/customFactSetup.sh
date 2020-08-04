@@ -25,9 +25,24 @@ then
   echo "AVAIL_ZONE: "$EC2_AVAIL_ZONE
   echo "REGION: "$EC2_REGION
   echo "AMI_ID: "$AMI_ID
-  echo "environment: Dev"
-  echo "Support_Team: web"
-  echo "Callout: 8-6"
+ 
+  case $EC2_INSTANCE_TYPE in
+        t2.micro)
+         echo "environment: Production"
+         echo "Support_Team: Hadoop"
+	 echo "Callout: 24-7"
+        ;;
+        t2.medium)
+         echo "environment: Dev"
+         echo "Support_Team: web"
+         echo "Callout: 8-6"
+        ;;
+        t2.small)
+         echo "environment: UAT"
+         echo "Support_Team: Database"
+         echo "Callout: 7-7"
+	;;
+  esac
 
 elif [ $AZURE == 0 ]
 then

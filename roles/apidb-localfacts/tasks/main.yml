@@ -1,4 +1,10 @@
 ---
+- name: clear any previous facts
+  file:
+    path: /tmp/local
+    state: absent
+
+
 - name: create temporary local fact home (non-root)
   file:
     path: /tmp/local
