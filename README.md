@@ -43,9 +43,6 @@ To authenticate with apidb.io you will need a TOKEN. To get yours, sign-up [here
 Once you have your unique TOKEN, update this variables under ````group_vars/all.yml````
 
 ````
----
-# vars file for apidb-apidb
-
 apidb_token: "your-token-here"
 ````
 
