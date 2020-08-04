@@ -73,6 +73,24 @@ An example of how to use this role:
       gather_facts: false
       roles:
         - apidb-post
+          gather_facts: true
+    roles:
+      - role: apidb-localfacts
+        tags: local_facts
+
+      - role: apidb-cis
+        tags: cis
+
+      - role: apidb-collect
+        tags: collect
+    
+    - hosts: localhost
+      connection: local
+      gather_facts: false
+      roles:
+        - role: apidb-post
+          tags: post
+
 
 License
 -------
