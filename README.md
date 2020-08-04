@@ -61,22 +61,22 @@ Example Playbook
 An example of how to use this role:
 
     ---
-    - hosts: localhost
-      connection: local
-      gather_facts: false
-      roles:
-        - apidb-post
-          gather_facts: true
-    roles:
-      - role: apidb-localfacts
-        tags: local_facts
-
-      - role: apidb-cis
-        tags: cis
-
-      - role: apidb-collect
-        tags: collect
+    - hosts: all
+      gather_facts: true
+          roles:
+        - role: apidb-localfacts
+         ` tags: local_facts
     
+        - role: apidb-cis
+          tags: cis
+    
+    #    - role: apidb-win
+    #      tags: win
+    #      when: ansible_distribution == "Microsoft Windows Server 2012 R2 Standard"
+    
+        - role: apidb-collect
+          tags: collect
+
     - hosts: localhost
       connection: local
       gather_facts: false
