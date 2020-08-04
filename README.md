@@ -61,13 +61,6 @@ Example Playbook
 An example of how to use this role:
 
     ---
-    - hosts: all
-      gather_facts: true
-      roles:
-        - apidb-localfacts
-        - apidb-cis
-        - apidb-collect
-    
     - hosts: localhost
       connection: local
       gather_facts: false
