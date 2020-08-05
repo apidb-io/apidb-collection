@@ -10,6 +10,7 @@
 
 AWS=`curl -s http://169.254.169.254/latest/dynamic/instance-identity/ | grep signature >/dev/null; echo $?`
 AZURE=`curl -s -H Metadata:true http://169.254.169.254/metadata/instance |grep api-version >/dev/null; echo $?`
+CPU=$(top -b -n1 | grep "Cpu(s)" | awk '{print $2 + $4}')
 fact_location=/tmp/local/local.fact
 
 (
@@ -25,6 +26,7 @@ then
   echo "AVAIL_ZONE: "$EC2_AVAIL_ZONE
   echo "REGION: "$EC2_REGION
   echo "AMI_ID: "$AMI_ID
+  if [ ${CPU%.*} -gt 50 ]; then echo "HIGH_CPU%: "$CPU ;fi
  
   case $EC2_INSTANCE_TYPE in
         t2.micro)
@@ -52,18 +54,20 @@ then
   AZURE_RESOURCE_GROUP_NAME=`curl -s -H Metadata:true http://169.254.169.254/metadata/instance?api-version=2019-11-01 | sed -e 's/[}"]*\(.\)[{"]*/\1/g;y/,/\n/' | grep resourceGroupName | awk -F: '{print $2}'`
 
   echo "cloud: AZURE"
-  echo "INSTANCE_SIZE: "$AZURE_INSTANCE_TYPE
+  echo "INSTANCE_TYPE: "$AZURE_INSTANCE_TYPE
   echo "REGION: "$AZURE_REGION
   echo "RESOURCE_GROUP_NAME: "$AZURE_RESOURCE_GROUP_NAME
   echo "environment: production"
   echo "Support_Team: database"
   echo "Callout: 24-7"
+  if [ ${CPU%.*} -gt 50 ]; then echo "HIGH_CPU%: "$CPU ;fi
 
 else
   echo "cloud: no_cloud"
   echo "environment: Dev"
   echo "Support_Team: operations"
   echo "Callout: none"
+  if [ ${CPU%.*} -gt 50 ]; then echo "HIGH_CPU%: "$CPU ;fi
 fi
 ) >> $fact_location
 
