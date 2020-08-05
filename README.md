@@ -40,12 +40,9 @@ Role Variables
 --------------
 
 To authenticate with apidb.io you will need a TOKEN. To get yours, sign-up [here](http://www.apidb.io). Create an account and visit the ````profile```` page.
-Once you have your unique TOKEN, update this variables under ````vars/main.yml````
+Once you have your unique TOKEN, update this variables under ````group_vars/all.yml````
 
 ````
----
-# vars file for apidb-apidb
-
 apidb_token: "your-token-here"
 ````
 
@@ -63,16 +60,44 @@ An example of how to use this role:
     ---
     - hosts: all
       gather_facts: true
-      roles:
-        - apidb-localfacts
-        - apidb-cis
-        - apidb-collect
+          roles:
+        - role: apidb-localfacts
+         ` tags: local_facts
     
+        - role: apidb-cis
+          tags: cis
+    
+    #    - role: apidb-win
+    #      tags: win
+    #      when: ansible_distribution == "Microsoft Windows Server 2012 R2 Standard"
+    
+        - role: apidb-collect
+          tags: collect
+
     - hosts: localhost
       connection: local
       gather_facts: false
       roles:
-        - apidb-post
+        - role: apidb-post
+          tags: post
+
+First run
+---------
+````
+ansible-playbook  deploy.yml --tags=collect,post
+````
+
+second run
+----------
+````
+ansible-playbook  deploy.yml --tags=local_facts,collect,post
+````
+
+third run
+---------
+````
+ansible-playbook  deploy.yml --tags=local_facts,cis,collect,post
+````
 
 License
 -------
