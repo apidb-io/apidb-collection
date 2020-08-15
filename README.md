@@ -97,9 +97,8 @@ Check the APIDB dashboard for your new data.
 
 Performance tuning
 ------------------
-If you're running against lots of servers, you can utilise the ansible.cfg "forks" setting. The default is 5 forks but you can increase this (depending on the size of your control node. You will need to do some testing, but you should be able to double or triple the number of forks you run.
+If you're running against lots of servers, you can utilise the ````ansible.cfg```` "forks" setting. The default is 5 forks but you can increase this (depending on the size of your control node. You will need to do some testing, but you should be able to double or triple the number of forks you run.
 
-  ansible.cfg
 
 ````
 [defaults]
