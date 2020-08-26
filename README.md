@@ -75,7 +75,7 @@ Create you own ````deploy.yml```` file and add the contents below.
 
 Security
 --------
-We do not collect your secure data. We use "restricted keys" to stop certain fields being sent to APIDB. You have the control to add morekeys or remove the defaults. You have control.
+We do not collect your secure data. We use "restricted keys" to stop certain fields being sent to APIDB. You have the control to add additional keys or remove the defaults.
 
 ![Alt text](images/apidb_screenshot2.PNG?raw=true)
 
