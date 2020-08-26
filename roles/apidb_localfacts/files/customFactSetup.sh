@@ -32,21 +32,22 @@ then
     echo "AMI_ID: "$AMI_ID
     #echo "SNAPSHOT_CPU_%: "$CPU
     #if [ -f /etc/redhat-release ]; then echo "OpenSSH_version: $(rpm -qa | grep openssh-clients)"; fi
+    #if kubectl version --client=true &> /dev/null;then echo -n "Kubernetes_version: "; kubectl version --client=true | awk -F\" '{print $2"."$4}'; fi
 
     case $EC2_INSTANCE_TYPE in
           t2.micro)
            echo "environment: Production"
-           echo "Support_Team: Hadoop"
+           echo "Support_Team: Hadoopi_Team"
            echo "Callout: 24-7"
           ;;
           t2.medium)
            echo "environment: Dev"
-           echo "Support_Team: web"
+           echo "Support_Team: Web_Team"
            echo "Callout: 8-6"
           ;;
           t2.small)
            echo "environment: UAT"
-           echo "Support_Team: Database"
+           echo "Support_Team: Database_Team"
            echo "Callout: 7-7"
           ;;
     esac
@@ -63,15 +64,15 @@ then
     echo "INSTANCE_TYPE: "$AZURE_INSTANCE_TYPE
     echo "REGION: "$AZURE_REGION
     echo "RESOURCE_GROUP_NAME: "$AZURE_RESOURCE_GROUP_NAME
-    echo "environment: production"
-    echo "Support_Team: database"
-    echo "Callout: 24-7"
+    echo "environment: Test"
+    echo "Support_Team: Operations-Team"
+    echo "Callout: 7-7"
     #echo "SNAPSHOT_CPU_%: "$CPU
 
   else
     echo "cloud: no_cloud"
     echo "environment: Dev"
-    echo "Support_Team: operations"
+    echo "Support_Team: Storage"
     echo "Callout: none"
     #echo "SNAPSHOT_CPU_%: "$CPU
 

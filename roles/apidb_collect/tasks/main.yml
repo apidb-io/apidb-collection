@@ -16,4 +16,5 @@
   copy:
     content: '{{ setupvar }}'
     dest: /tmp/facts/{{ ansible_hostname }}.yaml
+    mode: 0600
   delegate_to: localhost
