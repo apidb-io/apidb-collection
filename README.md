@@ -42,12 +42,10 @@ Dependencies
 
 Example Playbook
 ----------------
+Create you own ````deploy.yml```` file and add the contents below.
 
 ** Update the ````apidb_token: "your-Token"```` with your token from the profile page of your dashboard.**
 
-An example of how to use this role:
-
- * Create you own ````deploy.yml```` file and add the contents below.
 
     ---
     - hosts: all
@@ -94,6 +92,9 @@ Second run
 ----------
 The second run will add create some local facts. If your using AWS or Azure, the script will collect some basic metadata to display. The customFactSetup.sh script can be updated or swapped out for your own scripts to create the facts you need on each server.
 
+ * You'll need to customise your own local_facts for your environments. We're happy to provide support to get you up and running.
+ * If you require additional help to configure facts for your infrastructure, we provide consultancy to get you displaying the information you need.
+ 
 ````
 ansible-playbook  deploy.yml --tags=local_facts,collect,post
 ````
@@ -134,4 +135,6 @@ This role has been create by the APIDB team. Further information and contact is 
 
 Disclaimer
 ----------
-The ansible facts you send to APIDB will be stored in our DB. This will be remote from your company datacentre. Only send facts you are happy to send and make use of the "Resticted Keys" functionality. We also offer an Onsite solution where we can setup APIDB within your own Datacentre. Contact us for pricing and setup information.
+The ansible facts you send to APIDB will be stored in our DB. This will be remote from your company datacentre. Only send facts you are happy to send and make use of the "Resticted Keys" functionality. We also offer an onsite solution where we can setup APIDB within your own Datacentre, removing many security concerns.
+
+Contact us for pricing and setup information.
