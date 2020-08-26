@@ -1,11 +1,11 @@
 APIDB - visualise your facts
 ============================
 
-This collection contains all the roles needed to run APIDB and will allow you to visualise your infrastructure on [the apiDB dashboard](https://api.apidb.io/).
+This collection contains all the roles needed to run APIDB and will allow you to visualise your infrastructure on [the apiDB dashboard](https://app.apidb.io/).
 
 ![Alt text](images/apidb_screenshot1.PNG?raw=true)
 
- * Register a new account on [the apiDB dashboard](https://api.apidb.io/).
+ * Register a new account on [the apiDB dashboard](https://app.apidb.io/).
  * Check the profile page for your TOKEN.
 
 The roles are maintained by APIDB
