@@ -3,7 +3,7 @@ APIDB - visualise your facts
 
 This collection contains all the roles needed to run APIDB and will allow you to visualise your infrastructure on [the apiDB dashboard](https://app.apidb.io/).
 
-![Alt text](images/apidb_screenshot1.PNG?raw=true)
+![Alt text](apidb_screenshot1.PNG?raw=true)
 
  * Register a new account on [the apiDB dashboard](https://app.apidb.io/).
  * Check the profile page for your TOKEN.
@@ -77,7 +77,7 @@ Security
 --------
 We do not collect your secure data. We use "restricted keys" to stop certain fields being sent to APIDB. You have the control to add additional keys or remove the defaults.
 
-![Alt text](images/apidb_screenshot2.PNG?raw=true)
+![Alt text](apidb_screenshot2.PNG?raw=true)
 
 
 First run
