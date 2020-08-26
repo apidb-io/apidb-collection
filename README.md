@@ -92,7 +92,7 @@ Second run
 ----------
 The second run will add create some local facts. If your using AWS or Azure, the script will collect some basic metadata to display. The customFactSetup.sh script can be updated or swapped out for your own scripts to create the facts you need on each server.
 
- * You'll need to customise your own local_facts for your environments. We're happy to provide support to get you up and running.
+ * You'll need to customise the local_facts for your environments. We're happy to provide support to get you up and running.
  * If you require additional help to configure facts for your infrastructure, we provide consultancy to get you displaying the information you need.
  
 ````
