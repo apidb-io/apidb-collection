@@ -47,6 +47,8 @@ Example Playbook
 
 An example of how to use this role:
 
+ * Create you own ````deploy.yml```` file and add the contents below.
+
     ---
     - hosts: all
       collections:
@@ -100,6 +102,8 @@ Third run
 ---------
 This run will check to see how your servers match up to the CIS controls for RHEL/OEL/CENTOS7 only. Other OS's will follow is there is demand. On the dashboard, you can see the CIS controls on each server page.
 
+ * CIS facts currently only run on RHEL7 based servers (RHEL,Centos,OEL)
+
 ````
 ansible-playbook  deploy.yml --tags=local_facts,cis,collect,post
 ````
@@ -127,3 +131,7 @@ BSD
 Author Information
 ------------------
 This role has been create by the APIDB team. Further information and contact is available from [here](https://www.apidb.io/)
+
+Disclaimer
+----------
+The ansible facts you send to APIDB will be stored in our DB. This will be remote from your company datacentre. Only send facts you are happy to send and make use of the "Resticted Keys" functionality. We also offer an Onsite solution where we can setup APIDB within your own Datacentre. Contact us for pricing and setup information.
