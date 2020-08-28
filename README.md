@@ -77,7 +77,7 @@ Security
 --------
 We do not collect your secure data. We use "restricted keys" to stop certain fields being sent to APIDB. You have the control to add additional keys or remove the defaults.
 
-![Alt text](https://raw.githubusercontent.com/apidb-io/apidb-collection/master/apidb_screenshot2.PNG)
+<img src="https://raw.githubusercontent.com/apidb-io/apidb-collection/master/apidb_screenshot2.PNG"  width="602" height="99">
 
 
 First run
