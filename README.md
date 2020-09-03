@@ -48,9 +48,9 @@ Example deployment file
 -----------------------
 Create your own ````deploy.yml```` file and add the contents below.
 
-** Update the ````apidb_token: "your-Token"```` with your token from the profile page of your dashboard.**
+**Update the ````apidb_token: "your-Token"```` with your token from the profile page of your dashboard.**
 
-    ----
+    ---
     - name: create facts from linux and windows server
       hosts: collection
       collections:
