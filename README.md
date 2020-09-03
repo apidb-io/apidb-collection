@@ -82,6 +82,19 @@ Create your own ````deploy.yml```` file and add the contents below.
         - role: apidb_post
           tags: post
 
+Set-up the group_vars
+---------------------
+Run the following command to add a group_vars/all file and add the TOKEN:
+
+ * ````mkdir group_vars````
+ * Now add the TOKEN ````vi group_vars/all````
+ * Add the following to the file. Your TOKEN can be found on your "profile" page on [the APIDB dashboard](https://app.apidb.io/profile)
+ 
+````
+---
+apidb_token: "your-token"
+````
+
 ansible.cfg
 -----------
 Consider adding these settings to your ansible.cfg file under ````[defaults]````
