@@ -1,35 +1,11 @@
 ---
-- name: clear any previous facts
-  file:
-    path: /tmp/local
-    state: absent
+- name: Run Linux collection
+  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_localfacts/tasks/linux.yml
+  when: ansible_os_family != "Windows"
 
-
-- name: create temporary local fact home (non-root)
-  file:
-    path: /tmp/local
-    state: directory
-
-- name: Insert empty local fact file
-  copy:
-    src: files/local.fact
-    dest: /tmp/local/local.fact
-    mode: '0644'
-
-- name: insert custom fact script
-  copy:
-    src: files/customFactSetup.sh
-    dest: /tmp/local/customFactSetup.sh
-    mode: '0755'
-
-- name: add Instance facts
-  shell: /tmp/local/customFactSetup.sh
-
-- name: local facts
-  debug: var=ansible_local
-  notify:
-  - reload facts
-
-- name: reload facts
-  setup: filter=ansible_local
-
+######
+# Reservers for future use.
+#- name: Run Windows collection
+#  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_localfacts/tasks/windows.yml
+#  when: ansible_os_family == "Windows"
+#####

@@ -1,0 +1,25 @@
+---
+- name: remove CIS fact script
+  file:
+    path: /tmp/local/api_cis.fact
+    state: absent
+
+- name: create /tmp/local
+  file:
+    path: /tmp/local
+    state: directory
+    mode: 0755
+
+- name: Insert CIS fact script (non-root)
+  copy:
+    src: files/apidb_cis_rhel7.py
+    dest: /tmp/local/apidb_cis_rhel7.py
+    mode: '0755'
+
+- name: add CIS facts
+  command: python /tmp/local/apidb_cis_rhel7.py
+
+- name: remove CIS fact script
+  file:
+    path: /tmp/local/apidb_cis_rhel7.py
+    state: absent

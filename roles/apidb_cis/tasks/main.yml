@@ -1,21 +1,4 @@
 ---
-- name: remove CIS fact script
-  file:
-    path: /tmp/local/api_cis.fact
-    state: absent
-
-- name: Insert CIS fact script (non-root)
-  copy:
-    src: files/apidb_cis_rhel7.py
-    dest: /tmp/local/apidb_cis_rhel7.py
-    mode: '0755'
+- name: Run Linux collection
+  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_cis/tasks/rhel7.yml
   when: ansible_os_family == "RedHat" and ansible_distribution_major_version == '7'
-
-- name: add CIS facts
-  command: python /tmp/local/apidb_cis_rhel7.py
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == '7'
-
-- name: remove CIS fact script
-  file:
-    path: /tmp/local/apidb_cis_rhel7.py
-    state: absent

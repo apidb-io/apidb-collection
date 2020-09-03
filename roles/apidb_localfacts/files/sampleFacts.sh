@@ -31,8 +31,9 @@ then
     echo "REGION: "$EC2_REGION
     echo "AMI_ID: "$AMI_ID
     #echo "SNAPSHOT_CPU_%: "$CPU
-    #if [ -f /etc/redhat-release ]; then echo "OpenSSH_version: $(rpm -qa | grep openssh-clients)"; fi
+    if [ -f /etc/redhat-release ]; then echo "OpenSSH_version: $(rpm -qa | grep openssh-clients)"; fi
     #if kubectl version --client=true &> /dev/null;then echo -n "Kubernetes_version: "; kubectl version --client=true | awk -F\" '{print $2"."$4}'; fi
+
 
     case $EC2_INSTANCE_TYPE in
           t2.micro)

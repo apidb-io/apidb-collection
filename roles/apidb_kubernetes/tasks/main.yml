@@ -1,0 +1,46 @@
+---
+- name: remove any previous facts
+  file:
+    path: /tmp/local/kubernetes_files
+    state: absent
+
+- name: remove any previous facts
+  file:
+    path: /tmp/kubernetes_files
+    state: absent
+
+- name: create temporary local fact home
+  shell: mkdir -p /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/test-cluster.yml"| awk -F@ '{print $2}')
+
+- name: collect cluster-state
+  command: kubectl cluster-info dump --all-namespaces --kubeconfig="$HOME/.kube/test-cluster.yml" --output-directory=/tmp/cluster-state --insecure-skip-tls-verify
+
+- name: Find all namespace files from cluster-state
+  shell: for i in `find /tmp/cluster-state -name \*.json -type f`; do cp $i /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/test-cluster.yml"| awk -F@ '{print $2}')/$(echo $i |sed 's:/:.:g' | sed  's/^/''/'); done
+
+- name: Get Kubernetes cluster-info file
+  shell: kubectl config view --kubeconfig="$HOME/.kube/test-cluster.yml" -o json > /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/test-cluster.yml"| awk -F@ '{print $2}')/.cluster-info.json
+
+- name:
+  shell: rm /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/test-cluster.yml"| awk -F@ '{print $2}')/.*.kube-*
+
+- name: remove any previous facts
+  file:
+    path: /tmp/cluster-state
+    state: absent
+
+- name: create temporary local fact home
+  shell: mkdir -p /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/dev-cluster.yml"| awk -F@ '{print $2}')
+
+- name: collect cluster-state
+  command: kubectl cluster-info dump --all-namespaces --kubeconfig="$HOME/.kube/dev-cluster.yml" --output-directory=/tmp/cluster-state --insecure-skip-tls-verify
+
+- name: Find all namespace files from cluster-state
+  shell: for i in `find /tmp/cluster-state -name \*.json -type f`; do cp $i /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/dev-cluster.yml"| awk -F@ '{print $2}')/$(echo $i |sed 's:/:.:g' | sed  's/^/''/'); done
+
+- name: Get Kubernetes cluster-info file
+  shell: kubectl config view --kubeconfig="$HOME/.kube/dev-cluster.yml" -o json > /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/dev-cluster.yml"| awk -F@ '{print $2}')/.cluster-info.json
+
+- name: Remove kube-system files
+  shell: rm /tmp/kubernetes_files/$(kubectl config current-context --kubeconfig="$HOME/.kube/dev-cluster.yml"| awk -F@ '{print $2}')/.*.kube-*
+

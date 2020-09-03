@@ -1,0 +1,27 @@
+---
+- name: clear any previous facts
+  file:
+    path: /tmp/local
+    state: absent
+
+
+- name: create temporary local fact home (non-root)
+  file:
+    path: /tmp/local
+    state: directory
+
+- name: Insert empty local fact file
+  copy:
+    src: files/local.fact
+    dest: /tmp/local/local.fact
+    mode: '0644'
+
+- name: insert custom fact script
+  copy:
+    src: files/sampleFacts.sh
+    dest: /tmp/local/sampleFacts.sh
+    mode: '0755'
+
+- name: add Instance facts
+  shell: /tmp/local/sampleFacts.sh
+
