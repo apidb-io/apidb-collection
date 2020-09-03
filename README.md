@@ -17,6 +17,10 @@ Includes:
  * apidb_collect
  * apidb_post
 
+**Updates:**
+ * Support for Windows servers has been added.
+ * Support for Kubernetes has been added.
+ * Onsite/On-Prem builds are now supported if you would like to run this in your Datacentre.
 
 Usage
 -----
@@ -29,7 +33,7 @@ $ ansible-galaxy collection install apidb.apidb_collection -p ./collections
 Requirements
 ------------
 
-If your control node is Ubuntu, you may need to install ````python-requests```` to use this collection.
+Only if your control node is Ubuntu, you may need to install ````python-requests```` to use this collection.
 ````
 $ sudo apt-get install -y python-requests
 ````
@@ -40,38 +44,54 @@ Dependencies
  * Ansible >= 2.7
  * Python >= 2.7
 
-Example Playbook
-----------------
-Create you own ````deploy.yml```` file and add the contents below.
+Example deployment file
+-----------------------
+Create your own ````deploy.yml```` file and add the contents below.
 
 ** Update the ````apidb_token: "your-Token"```` with your token from the profile page of your dashboard.**
 
-
-    ---
-    - hosts: all
+    ----
+    - name: create facts from linux and windows server
+      hosts: collection
       collections:
         - apidb.apidb_collection
-      roles:
-        - role: apidb_localfacts
-          tags: local_facts
-
-        - role: apidb_cis
-          tags: cis
-
-        - role: apidb_collect
-          tags: collect
+      tasks:
+        - import_role:
+            name: apidb_localfacts
+          tags: facts
+          when: '"facts" in ansible_run_tags'
     
-    - hosts: localhost
+        - import_role:
+            name: apidb_cis
+          tags: cis
+          when: '"cis" in ansible_run_tags'
+    
+        - import_role:
+            name: apidb_collect
+          tags: collect
+          when: '"collect" in ansible_run_tags'
+      tags: run
+    
+    - name: Post to APIDB
+      hosts: localhost
       connection: local
       gather_facts: false
-      vars:
-        apidb_token: "your-Token" # <-- Add your TOKEN HERE inside the ""
       collections:
         - apidb.apidb_collection
       roles:
         - role: apidb_post
           tags: post
 
+ansible.cfg
+-----------
+Consider adding these settings to your ansible.cfg file under ````[defaults]````
+
+````
+[defaults]
+forks = 30                      # See Performance below for more details
+inventory = inventory           # This should point to your inventory file
+display_skipped_hosts = false   # This removes the "skipping messages from the ansible run"
+````
 
 Security
 --------
@@ -84,18 +104,18 @@ First run
 Initial run to check everything is working and you have connectivity. The dashboard will display a breakdown of the number of each OS by version.
 
 ````
-ansible-playbook  deploy.yml --tags=collect,post
+ansible-playbook  deploy.yml --tags=run,collect,post
 ````
 
 Second run
 ----------
-The second run will add create some local facts. If your using AWS or Azure, the script will collect some basic metadata to display. The customFactSetup.sh script can be updated or swapped out for your own scripts to create the facts you need on each server.
+The second run will create some local facts (in /tmp). If your using AWS or Azure, the script will also collect some basic metadata to display. The sampleFacts.sh script can be updated or swapped out for your own scripts to create the facts you need on each server.
 
  * You'll need to customise the local_facts for your environments. We're happy to provide support to get you up and running.
  * If you require additional help to configure facts for your infrastructure, we provide consultancy to get you displaying the information you need.
  
 ````
-ansible-playbook  deploy.yml --tags=local_facts,collect,post
+ansible-playbook  deploy.yml --tags=run,facts,collect,post
 ````
 
 Third run
@@ -105,27 +125,58 @@ This run will check to see how your servers match up to the CIS controls for RHE
  * CIS facts currently only run on RHEL7 based servers (RHEL,Centos,OEL)
 
 ````
-ansible-playbook  deploy.yml --tags=local_facts,cis,collect,post
+ansible-playbook  deploy.yml --tags=run,facts,cis,collect,post
 ````
 
 Dashboard
 ---------
 Check the APIDB dashboard for your new data.
 
-
 Performance tuning
 ------------------
 If you're running against lots of servers, you can utilise the ````ansible.cfg```` "forks" setting. The default is 5 forks but you can increase this (depending on the size of your control node). You will need to do some testing, but you should be able to double or triple the number of forks you run.
 
-
+I.E.
 ````
 [defaults]
 forks = 20
 ````
 
+Experimental Kubernetes role
+---------------------------
+This role is currently under development but is available for you to test.
+Expectations/limitations:
+
+ * This role will only run against Bastion host(s) - (A host that can connect to your kubernetes master).
+ * Authentication: CUrrently only support the kubeconfig file (This will need to be updated manually).
+ * Username/Password & TOKEN authentication is being delevoped.
+
+To use the Kubernetes role, add the following to the deploy.yml file:
+
+````
+    - name: Sample kubernetes data collection
+      hosts: localhost
+      connection: local
+      gather_facts: false
+      collections:
+        - apidb.apidb_collection
+      tasks:
+        - import_role:
+            name: apidb_kubernetes
+          tags: k8s
+          when: '"k8s" in ansible_run_tags'
+      tags: gather
+````
+
+You will need to update the ````hosts:```` to point to your bastion server.
+
+Usage:
+````
+ansible-playbook  deploy.yml --tags=gather,k8s
+````
+
 License
 -------
-
 BSD
 
 Author Information
