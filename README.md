@@ -48,8 +48,6 @@ Example deployment file
 -----------------------
 Create your own ````deploy.yml```` file and add the contents below.
 
-**Update the ````apidb_token: "your-Token"```` with your token from the profile page of your dashboard.**
-
     ---
     - name: create facts from linux and windows server
       hosts: all
@@ -94,7 +92,8 @@ Run the following command to add a group_vars/all file and add the TOKEN:
 ---
 apidb_token: "your-token"
 ````
-
+ * Now save the file.
+ 
 ansible.cfg
 -----------
 Consider adding these settings to your ansible.cfg file under ````[defaults]````
