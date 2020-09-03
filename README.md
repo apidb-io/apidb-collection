@@ -52,7 +52,7 @@ Create your own ````deploy.yml```` file and add the contents below.
 
     ---
     - name: create facts from linux and windows server
-      hosts: collection
+      hosts: all
       collections:
         - apidb.apidb_collection
       tasks:
@@ -99,11 +99,15 @@ ansible.cfg
 -----------
 Consider adding these settings to your ansible.cfg file under ````[defaults]````
 
+ * Forks allows to run more concurrent runs than the default of 5.
+ * Inventory should point to your inventory file
+ * display_skipped_hosts won't show all the "skipped" ansible code.
+
 ````
 [defaults]
-forks = 30                      # See Performance below for more details
-inventory = inventory           # This should point to your inventory file
-display_skipped_hosts = false   # This removes the "skipping messages from the ansible run"
+forks = 30
+inventory = inventory
+display_skipped_hosts = false
 ````
 
 Security
