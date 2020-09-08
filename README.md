@@ -16,6 +16,7 @@ Includes:
  * apidb_cis
  * apidb_collect
  * apidb_post
+ * apidb_kubernetes
 
 **Updates:**
 
@@ -59,18 +60,14 @@ Create your own ````deploy.yml```` file and add the contents below.
         - import_role:
             name: apidb_localfacts
           tags: facts
-          when: '"facts" in ansible_run_tags'
     
         - import_role:
             name: apidb_cis
           tags: cis
-          when: '"cis" in ansible_run_tags'
     
         - import_role:
             name: apidb_collect
           tags: collect
-          when: '"collect" in ansible_run_tags'
-      tags: run
     
     - name: Post to APIDB
       hosts: localhost
@@ -81,6 +78,7 @@ Create your own ````deploy.yml```` file and add the contents below.
       roles:
         - role: apidb_post
           tags: post
+
 
 Set-up the group_vars
 ---------------------
@@ -169,8 +167,16 @@ Expectations/limitations:
 
 
  * This role will only run against Bastion host(s) - (A host that can connect to your kubernetes master).
- * Authentication: CUrrently only support the kubeconfig file (This will need to be updated manually).
+ * Authentication: Currently only support the kubeconfig file (This will need to be updated manually).
  * Username/Password & TOKEN authentication is being developed.
+
+Manage your kubeconfig files in the ````group_vars/all```` file. Add the location of your kubeconfig file as below. If you have multiple clusters, you can add multiple kubeconfig files.
+
+````
+kubeconfig:
+  - "$HOME/.kube/test-cluster.yml"
+  - "$HOME/.kube/dev-cluster.yml"
+````
 
 To use the Kubernetes role, add the following to the deploy.yml file:
 
@@ -201,26 +207,36 @@ APIDB API
 You also have the option to use the APIDB API to pull out server and fact information directly from the database. Here are some examples:
 
  * Export your APIKEY first (Found on the profile page):
+
  ````
  export apikey=1234567891011121314151617
  ````
+
  * Server list:
+
  ````
  curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq
  ````
+
  * List all production servers:
+
  ````
  curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq
  ````
+
  * List all production server but only show Servername & Environment:
+
  ````
  curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Env: .factvalue}] | group_by(.serverid, .factvalue)'
  ````
+
  * Show all CentOS 6.9 servers:
  ````
  curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, OS: .factvalue}] | group_by(.serverid, .factvalue)'
  ````
+
  * List all T2.small instance types:
+
  ````
  curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Instance_type: .factvalue}] | group_by(.serverid, .factvalue)'
  ````
