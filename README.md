@@ -122,7 +122,7 @@ First run
 Initial run to check everything is working and you have connectivity. The dashboard will display a breakdown of the number of each OS by version.
 
 ````
-ansible-playbook  deploy.yml --tags=run,collect,post
+ansible-playbook  deploy.yml --tags=collect,post
 ````
 
 Second run
@@ -133,7 +133,7 @@ The second run will create some local facts (in /tmp). If your using AWS or Azur
  * If you require additional help to configure facts for your infrastructure, we provide consultancy to get you displaying the information you need.
  
 ````
-ansible-playbook  deploy.yml --tags=run,facts,collect,post
+ansible-playbook  deploy.yml --tags=facts,collect,post
 ````
 
 Third run
@@ -143,7 +143,7 @@ This run will check to see how your servers match up to the CIS controls for RHE
  * CIS facts currently only run on RHEL7 based servers (RHEL,Centos,OEL)
 
 ````
-ansible-playbook  deploy.yml --tags=run,facts,cis,collect,post
+ansible-playbook  deploy.yml --tags=facts,cis,collect,post
 ````
 
 Dashboard
@@ -165,9 +165,12 @@ Experimental Kubernetes role
 This role is currently under development but is available for you to test.
 Expectations/limitations:
 
+<img src="https://raw.githubusercontent.com/apidb-io/apidb-collection/master/kubernetes_cluster.JPG">
+
+
  * This role will only run against Bastion host(s) - (A host that can connect to your kubernetes master).
  * Authentication: CUrrently only support the kubeconfig file (This will need to be updated manually).
- * Username/Password & TOKEN authentication is being delevoped.
+ * Username/Password & TOKEN authentication is being developed.
 
 To use the Kubernetes role, add the following to the deploy.yml file:
 
@@ -192,6 +195,35 @@ Usage:
 ````
 ansible-playbook  deploy.yml --tags=gather,k8s
 ````
+
+APIDB API
+---------
+You also have the option to use the APIDB API to pull out server and fact information directly from the database. Here are some examples:
+
+ * Export your APIKEY first (Found on the profile page):
+ ````
+ export apikey=1234567891011121314151617
+ ````
+ * Server list:
+ ````
+ curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq
+ ````
+ * List all production servers:
+ ````
+ curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq
+ ````
+ * List all production server but only show Servername & Environment:
+ ````
+ curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Env: .factvalue}] | group_by(.serverid, .factvalue)'
+ ````
+ * Show all CentOS 6.9 servers:
+ ````
+ curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, OS: .factvalue}] | group_by(.serverid, .factvalue)'
+ ````
+ * List all T2.small instance types:
+ ````
+ curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Instance_type: .factvalue}] | group_by(.serverid, .factvalue)'
+ ````
 
 License
 -------
