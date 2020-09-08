@@ -180,7 +180,6 @@ kubeconfig:
 
 To use the Kubernetes role, add the following to the deploy.yml file:
 
-````
     - name: Sample kubernetes data collection
       hosts: localhost
       connection: local
@@ -193,7 +192,7 @@ To use the Kubernetes role, add the following to the deploy.yml file:
           tags: k8s
           when: '"k8s" in ansible_run_tags'
       tags: gather
-````
+
 
 You will need to update the ````hosts:```` to point to your bastion server.
 
