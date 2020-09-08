@@ -193,7 +193,7 @@ You will need to update the ````hosts:```` to point to your bastion server.
 
 Usage:
 ````
-ansible-playbook  deploy.yml --tags=gather,k8s
+ansible-playbook  deploy.yml --tags=gather,k8s,post
 ````
 
 APIDB API
