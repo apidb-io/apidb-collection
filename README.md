@@ -19,9 +19,10 @@ Includes:
 
 **Updates:**
 
- * Support for Windows servers has been added.
- * Support for Kubernetes has been added.
- * Onsite/On-Prem builds are now supported if you would like to run this in your Datacentre.
+ * **API is available. Check examples below**
+ * **Support for Windows servers has been added.**
+ * **Support for Kubernetes has been added.**
+ * **Onsite/On-Prem builds are now supported if you would like to run this in your Datacentre.**
 
 Usage
 -----

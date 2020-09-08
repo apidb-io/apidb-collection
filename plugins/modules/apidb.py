@@ -39,9 +39,9 @@ def sanitiseDict(d):
     return d
 
 
-def apidb(directory,p,filename):
+def apidb(directory,p,apiendpoint,filename):
     API_KEY =  p["apidbtoken"]
-    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".apidb.io/api/ansiblefacts"
+    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".apidb.io/api/" + apiendpoint
     headers = {
         'Authorization': "Token " + API_KEY,
         'Content-Type': 'text/json',
@@ -56,23 +56,51 @@ def apidb(directory,p,filename):
     return statuscode
 
 def postdata(p):
-    getkeys(p)
     statuscode = ''
     result = ''
-    debugstatus = ''
     is_error = False
     has_changed = False
-    meta = {"statuscode" : statuscode, "response" : result, "debug" : debugstatus}
+    meta = {"statuscode" : statuscode, "response" : result}
     directory='/tmp/facts/'
     agents = p["threads"] # How many instances to run
     chunksize = p["chunksize"]  # How many servers per agents
+    apiendpoint = "ansiblefacts"
     filename = os.listdir(directory)
     with closing(Pool(processes=agents)) as pool:
-        func = partial(apidb, directory, p)
+        func = partial(apidb, directory, p, apiendpoint)
         result = pool.map(func,filename,chunksize)
         pool.terminate()
+    return is_error, has_changed, meta
 
-#    for filename in os.listdir(directory):
+
+def kubernetes(p):
+    statuscode = ''
+    result = ''
+    is_error = False
+    has_changed = False
+    meta = {"statuscode" : statuscode, "response" : result}
+    directory='/tmp/kubernetes_files'
+    for root, dirs, files in os.walk(directory):
+        for dir in dirs:
+            nodesfile = ".tmp.cluster-state.nodes.json"
+            for clusterroot, clusterdirs, clusterfiles in os.walk(directory + "/" + dir):
+                for c in clusterfiles:
+                    if c ==  ".tmp.cluster-state.nodes.json":
+                        endpoint = "plugins/kubernetes/" + dir + "/nodes"
+                        fullpath=directory + "/" + dir + "/"
+                        apidb(fullpath,p,endpoint,c)
+                    elif c ==  ".cluster-info.json":
+                        endpoint="plugins/kubernetes/" + dir + "/cluster"
+                        fullpath=directory + "/" + dir + "/"
+                        apidb(fullpath,p,endpoint,c)
+                    elif  "pods.json" in c:
+                        endpoint="plugins/kubernetes/" + dir + "/pods"
+                        fullpath=directory + "/" + dir + "/"
+                        apidb(fullpath,p,endpoint,c)
+                    elif  "deployments.json" in c:
+                        endpoint="plugins/kubernetes/" + dir + "/deployments"
+                        fullpath=directory + "/" + dir + "/"
+                        apidb(fullpath,p,endpoint,c)
     return is_error, has_changed, meta
 
 
@@ -87,8 +115,9 @@ def main():
     }
 
     module = AnsibleModule(argument_spec=fields)
-
+    getkeys(module.params)
     is_error, has_changed, result = postdata(module.params)
+    is_error, has_changed, result = kubernetes(module.params)
 
     if not is_error:
         module.exit_json(changed=has_changed, meta=result)
