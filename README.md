@@ -141,6 +141,10 @@ We've setup a simple way for your to run you're own custom playbooks to collect 
 ````
  * Run the playbook as below:
 
+````
+ansible-playbook deploy.yml
+````
+
 2) You're free to add your own playbooks into same directory once you create it and they will be picked up when the apidb collection runs.
 
  * In the same base DIR of the collection, create the directory: ````mkdir custom_extensions````
@@ -148,7 +152,7 @@ We've setup a simple way for your to run you're own custom playbooks to collect 
  * Run the playbook as below:
 
 ````
-ansible-playbook  deploy.yml
+ansible-playbook deploy.yml
 ````
 
 Dashboard
@@ -214,27 +218,27 @@ You also have the option to use the APIDB API to pull out server and fact inform
 
  * Export your APIKEY first (Found on the profile page):
 
-    export apikey=1234567891011121314151617
+    ````export apikey=1234567891011121314151617````
 
  * Server list:
 
-    curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq
+    ````curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq````
 
  * List all production servers:
 
-    curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq
+    ````curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq````
 
  * List all production server but only show Servername & Environment:
 
-    curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
+    ````curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'````
 
  * Show all CentOS 6.9 servers:
  
-    curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
+    ````curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'````
 
  * List all T2.small instance types:
 
-    curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
+    ````curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'````
 
 
 License
