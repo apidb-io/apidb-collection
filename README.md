@@ -56,7 +56,7 @@ Example deployment file
 Create your own ````deploy.yml```` file and add the contents below.
 
     ---
-    - name: create facts from linux and windows server
+    - name: collect facts
       hosts: all
       collections:
         - apidb.apidb_collection
@@ -117,17 +117,24 @@ We do not collect your secure data. We use "restricted keys" to stop certain fie
 
 Intital run
 ---------
-Initial run to check everything is working and you have connectivity. Once run, your dashboard will display distrubution, kernel, operatingsystem and uptime values.
+Now you have the collection downloaded, you can complete the first run to check everything is working and you have connectivity. Once run, your dashboard will display distrubution, kernel, operatingsystem and uptime values.
 
 ````
-ansible-playbook  deploy.yml --tags=collect,post
+ansible-playbook  deploy.yml
 ````
+
+First Fact run complete
+-----------------------
+You should now have successfully collected the 4 Ansible facts available and can view them on the dashboard. If you click on the servers tab or on one of the servers on the dashboard, you can view specific server information.
+
+The power of APIDB really comes into it's own when you add your own facts. These can be anything from the datacentre a server is in, to the version of a particualr piece of software. If you want to add your own facts, you have two options below.
 
 Adding your own Custom Facts
 ----------------------------
 We've setup a simple way for your to run you're own custom playbooks to collect facts important to you. Follow this process:
 
-1) Use our prepared facts from our [custom_extensions](https://github.com/apidb-io/custom_extensions) repo in github.
+**Option 1**
+Use our prepared facts from our [custom_extensions](https://github.com/apidb-io/custom_extensions) repo in github.
 
  * Clone the repo into the same base DIR as our collection: ````git clone https://github.com/apidb-io/custom_extensions.git````
  * Edit the main.yml ````vi custom_extensions/main.yml```` 
@@ -145,7 +152,8 @@ We've setup a simple way for your to run you're own custom playbooks to collect 
 ansible-playbook deploy.yml
 ````
 
-2) You're free to add your own playbooks into same directory once you create it and they will be picked up when the apidb collection runs.
+**Option 2**
+You're free to add your own playbooks into same directory once you create it and they will be picked up when the apidb collection runs.
 
  * In the same base DIR of the collection, create the directory: ````mkdir custom_extensions````
  * Add your own playbooks templates, files etc into this DIR.
