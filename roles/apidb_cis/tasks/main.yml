@@ -1,4 +1,0 @@
----
-- name: Run Linux collection
-  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_cis/tasks/rhel7.yml
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version == '7'

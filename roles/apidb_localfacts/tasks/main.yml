@@ -1,11 +1,7 @@
 ---
-- name: Run Linux collection
-  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_localfacts/tasks/linux.yml
-  when: ansible_os_family != "Windows"
+# This playbook allows you to run custom  playbooks
 
-######
-# Reservers for future use.
-#- name: Run Windows collection
-#  import_tasks: collections/ansible_collections/apidb/apidb_collection/roles/apidb_localfacts/tasks/windows.yml
-#  when: ansible_os_family == "Windows"
-#####
+- name: loading Custom Plays
+  include: "{{ item }}"
+  with_fileglob:
+    - "{{ lookup('env', 'PWD') }}/custom_extensions/*.yml"

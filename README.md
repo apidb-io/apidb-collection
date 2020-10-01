@@ -13,13 +13,13 @@ The roles are maintained by APIDB
 Includes:
 
  * apidb_localfacts
- * apidb_cis
  * apidb_collect
  * apidb_post
  * apidb_kubernetes
 
 **Updates:**
 
+ * **Added ability for users to add their own custom extensions/playbooks**
  * **API is available. Check examples below**
  * **Support for Windows servers has been added.**
  * **Support for Kubernetes has been added.**
@@ -36,9 +36,13 @@ $ ansible-galaxy collection install apidb.apidb_collection -p ./collections
 Requirements
 ------------
 
-Only if your control node is Ubuntu, you may need to install ````python-requests```` to use this collection.
+Only if your control node is Ubuntu or RHEL/Centos/OEL 8, you may need to install ````python-requests```` to use this collection.
 ````
 $ sudo apt-get install -y python-requests
+````
+or
+````
+$ yum install -y python-requests
 ````
 
 Dependencies
@@ -60,10 +64,6 @@ Create your own ````deploy.yml```` file and add the contents below.
         - import_role:
             name: apidb_localfacts
           tags: facts
-    
-        - import_role:
-            name: apidb_cis
-          tags: cis
     
         - import_role:
             name: apidb_collect
@@ -104,7 +104,7 @@ Consider adding these settings to your ansible.cfg file under ````[defaults]````
 
 ````
 [defaults]
-forks = 30
+forks = 20
 inventory = inventory
 display_skipped_hosts = false
 ````
@@ -115,33 +115,40 @@ We do not collect your secure data. We use "restricted keys" to stop certain fie
 
 <img src="https://raw.githubusercontent.com/apidb-io/apidb-collection/master/apidb_screenshot4.JPG"> 
 
-First run
+Intital run
 ---------
-Initial run to check everything is working and you have connectivity. The dashboard will display a breakdown of the number of each OS by version.
+Initial run to check everything is working and you have connectivity. Once run, your dashboard will display distrubution, kernel, operatingsystem and uptime values.
 
 ````
 ansible-playbook  deploy.yml --tags=collect,post
 ````
 
-Second run
-----------
-The second run will create some local facts (in /tmp). If your using AWS or Azure, the script will also collect some basic metadata to display. The sampleFacts.sh script can be updated or swapped out for your own scripts to create the facts you need on each server.
+Adding your own Custom Facts
+----------------------------
+We've setup a simple way for your to run you're own custom playbooks to collect facts important to you. Follow this process:
 
- * You'll need to customise the local_facts for your environments. We're happy to provide support to get you up and running.
- * If you require additional help to configure facts for your infrastructure, we provide consultancy to get you displaying the information you need.
- 
+1) Use our prepared facts from our [custom_extensions](https://github.com/apidb-io/custom_extensions) repo in github.
+
+ * Clone the repo into the same base DIR as our collection: ````git clone https://github.com/apidb-io/custom_extensions.git````
+ * Edit the main.yml ````vi custom_extensions/main.yml```` 
+ * Un-hash the playbooks you would like to run
 ````
-ansible-playbook  deploy.yml --tags=facts,collect,post
+    - custom_extensions/extensions/tidyup.yml # Cleans out old files
+#    - custom_extensions/extensions/sample_facts.yml # My own loacl fact collection populates the dashboard.
+#    - custom_extensions/extensions/cis.yml # Checks CIS controls against RHEL7
+#    - custom_extensions/extensions/packages.yml # adds packages intot he dashboard.
+#    - custom_extensions/extensions/sysctl.yml # Add sysctl settings into the dashboard.
 ````
+ * Run the playbook as below:
 
-Third run
----------
-This run will check to see how your servers match up to the CIS controls for RHEL/OEL/CENTOS7 only. Other OS's will follow is there is demand. On the dashboard, you can see the CIS controls on each server page.
+2) You're free to add your own playbooks into same directory once you create it and they will be picked up when the apidb collection runs.
 
- * CIS facts currently only run on RHEL7 based servers (RHEL,Centos,OEL)
+ * In the same base DIR of the collection, create the directory: ````mkdir custom_extensions````
+ * Add your own playbooks templates, files etc into this DIR.
+ * Run the playbook as below:
 
 ````
-ansible-playbook  deploy.yml --tags=facts,cis,collect,post
+ansible-playbook  deploy.yml
 ````
 
 Dashboard
@@ -207,38 +214,28 @@ You also have the option to use the APIDB API to pull out server and fact inform
 
  * Export your APIKEY first (Found on the profile page):
 
- ````
- export apikey=1234567891011121314151617
- ````
+    export apikey=1234567891011121314151617
 
  * Server list:
 
- ````
- curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq
- ````
+    curl --silent -X GET https://app.apidb.io/api/servers   -H "Authorization: Token $apikey"  -H "Accept:application/json" | jq
 
  * List all production servers:
 
- ````
- curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq
- ````
+    curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq
 
  * List all production server but only show Servername & Environment:
 
- ````
- curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Env: .factvalue}] | group_by(.serverid, .factvalue)'
- ````
+    curl --silent -X GET https://app.apidb.io/api/facts/environment/production   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
 
  * Show all CentOS 6.9 servers:
- ````
- curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, OS: .factvalue}] | group_by(.serverid, .factvalue)'
- ````
+ 
+    curl --silent -X GET https://app.apidb.io/api/facts/operatingsystem/"centos 6.9"   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
 
  * List all T2.small instance types:
 
- ````
- curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .serverid, Instance_type: .factvalue}] | group_by(.serverid, .factvalue)'
- ````
+    curl --silent -X GET https://app.apidb.io/api/facts/instance_type/t2.small   -H "Authorization: Token $apikey" -H "Accept:application/json" | jq '[.servers[] | {name: .fqdn, Env: .factvalue}] | group_by(.fqdn, .factvalue)'
+
 
 License
 -------
