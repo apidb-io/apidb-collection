@@ -157,6 +157,19 @@ You're free to add your own playbooks into same directory once you create it and
 
  * In the same base DIR of the collection, create the directory: ````mkdir custom_extensions````
  * Add your own playbooks templates, files etc into this DIR.
+   * To create your own facts, you need to create a file in ````/tmp/local/<name>.fact```
+   * Add a title to line one like this: ````[fact_name]````
+   * The facts need to be in this format ````key: value````:
+
+**I.E**
+````
+[local_facts]
+cloud: AWS
+INSTANCE_TYPE: t2.micro
+AVAIL_ZONE: eu-west-1b
+REGION: eu-west-1
+````
+
  * Run the playbook as below:
 
 ````
@@ -171,7 +184,7 @@ Performance tuning
 ------------------
 If you're running against lots of servers, you can utilise the ````ansible.cfg```` "forks" setting. The default is 5 forks but you can increase this (depending on the size of your control node). You will need to do some testing, but you should be able to double or triple the number of forks you run.
 
-I.E.
+**I.E.**
 ````
 [defaults]
 forks = 20
