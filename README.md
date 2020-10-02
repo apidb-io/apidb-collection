@@ -133,7 +133,7 @@ Adding your own Custom Facts
 ----------------------------
 We've setup a simple way for your to run you're own custom playbooks to collect facts important to you. Follow this process:
 
-**Option 1**
+**Option 1**:
 Use our prepared facts from our [custom_extensions](https://github.com/apidb-io/custom_extensions) repo in github.
 
  * Clone the repo into the same base DIR as our collection: ````git clone https://github.com/apidb-io/custom_extensions.git````
@@ -152,12 +152,12 @@ Use our prepared facts from our [custom_extensions](https://github.com/apidb-io/
 ansible-playbook deploy.yml
 ````
 
-**Option 2**
-You're free to add your own playbooks into same directory once you create it and they will be picked up when the apidb collection runs.
+**Option 2**:
+You're free to add your own playbooks into the same directory once you create it and they will be picked up when the apidb collection runs.
 
  * In the same base DIR of the collection, create the directory: ````mkdir custom_extensions````
  * Add your own playbooks templates, files etc into this DIR.
-   * To create your own facts, you need to create a file in ````/tmp/local/<name>.fact```
+   * To create your own facts, you need to create a file **ON THE REMOTE SERVERS** in ````/tmp/local/<name>.fact```
    * Add a title to line one like this: ````[fact_name]````
    * The facts need to be in this format ````key: value````:
 
@@ -170,7 +170,7 @@ AVAIL_ZONE: eu-west-1b
 REGION: eu-west-1
 ````
 
- * Run the playbook as below:
+ * Run the playbook as below and the APIDB collection will collect the facts and display them in the dashboard:
 
 ````
 ansible-playbook deploy.yml
