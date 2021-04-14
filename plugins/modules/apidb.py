@@ -7,6 +7,7 @@ import json
 import requests
 import subprocess
 
+
 def getkeys(p):
     API_KEY =  p["apidbtoken"]
     API_ENDPOINT = "https://" + p["apidbendpoint"] + ".apidb.io/api/ansiblerestrictedkeys"
@@ -15,7 +16,7 @@ def getkeys(p):
     'Content-Type': 'text/json',
     'Accept':'application/json'
     }
-    r = requests.get(url = API_ENDPOINT, headers=headers)
+    r = requests.get(url = API_ENDPOINT, headers=headers, verify=False)
     result = r.json()
     with open('collections/ansible_collections/apidb/apidb_collection/roles/apidb_post/library/keys_to_sanitise.json', 'wb') as file:
         file.write(result)
@@ -49,7 +50,7 @@ def apidb(directory,p,apiendpoint,filename):
      }
     data = open(directory + filename, 'rb').read()
     jdata = sanitiseDict(json.loads(data))
-    r = requests.post(url = API_ENDPOINT, headers=headers, data=json.dumps(jdata))
+    r = requests.post(url = API_ENDPOINT, headers=headers, data=json.dumps(jdata), verify=False)
     result = r.text
     statuscode = r.status_code
     meta = {"statuscode" : statuscode, "keys_to_sanitise" : 'key', "endpoint": API_ENDPOINT}
