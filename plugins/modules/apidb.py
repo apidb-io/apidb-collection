@@ -10,7 +10,7 @@ import subprocess
 
 def getkeys(p):
     API_KEY =  p["apidbtoken"]
-    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".apidb.io/api/ansiblerestrictedkeys"
+    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".ansibledb.com/api/ansiblerestrictedkeys"
     headers = {
     'Authorization': "Token " + API_KEY,
     'Content-Type': 'text/json',
@@ -42,7 +42,7 @@ def sanitiseDict(d):
 
 def apidb(directory,p,apiendpoint,filename):
     API_KEY =  p["apidbtoken"]
-    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".apidb.io/api/" + apiendpoint
+    API_ENDPOINT = "https://" + p["apidbendpoint"] + ".ansibledb.com/api/" + apiendpoint
     headers = {
         'Authorization': "Token " + API_KEY,
         'Content-Type': 'text/json',
