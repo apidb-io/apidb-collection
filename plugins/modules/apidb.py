@@ -18,7 +18,7 @@ def getkeys(p):
     }
     r = requests.get(url = API_ENDPOINT, headers=headers, verify=False)
     result = r.json()
-    with open('collections/ansible_collections/apidb/apidb_collection/roles/apidb_post/library/keys_to_sanitise.json', 'wb') as file:
+    with open('collections/ansible_collections/apidb/apidb_collection/roles/apidb_post/library/keys_to_sanitise.json', 'w') as file:
         file.write(result)
 
 
@@ -26,7 +26,7 @@ def getkeys(p):
 
 def sanitiseDict(d):
 
-    sankeys = open("collections/ansible_collections/apidb/apidb_collection/roles/apidb_post/library/keys_to_sanitise.json", 'rb').read()
+    sankeys = open("collections/ansible_collections/apidb/apidb_collection/roles/apidb_post/library/keys_to_sanitise.json", 'r').read()
     keys = json.loads(sankeys)
     keys_to_sanitise = keys['keys_to_sanitise']
 
